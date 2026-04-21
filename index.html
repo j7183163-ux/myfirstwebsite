@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>FiBB e.V. – La diversité est notre force.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════
+   RESET & VARIABLES
+═══════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+
+:root{
+  --green:#5b9e4d; --green-d:#3d7035; --green-m:#4a8a3d;
+  --green-l:#eaf4e6; --green-xl:#f4fbf2;
+  --orange:#e07b1a; --orange-l:#fef3e4;
+  --blue:#3d80c4; --red:#c45b5b; --purple:#8e3b8e;
+  --text:#333; --muted:#666; --border:#ddd;
+  --white:#fff; --bg:#f7f9f6;
+  --nav-h:78px;
+  --font:'Open Sans',sans-serif;
+  --ease-out:cubic-bezier(.22,.68,0,1.2);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--white);color:var(--text);font-size:15px;line-height:1.7;overflow-x:hidden}
+a{color:var(--green);text-decoration:none}
+a:hover{color:var(--green-d);text-decoration:underline}
+img{display:block;max-width:100%}
+
+/* ═══════════════════════════════════
+   COOKIE BANNER
+═══════════════════════════════════ */
+#cookie-overlay{
+  position:fixed;inset:0;z-index:9998;
+  background:rgba(0,0,0,.52);
+  display:flex;align-items:flex-end;
+  transition:opacity .35s;
+}
+#cookie-overlay.hidden{opacity:0;pointer-events:none}
+#cookie-box{
+  width:100%;background:var(--white);
+  padding:1.5rem 2rem 1.8rem;
+  border-top:4px solid var(--green);
+  box-shadow:0 -4px 32px rgba(0,0,0,.18);
+  animation:slideUp .4s var(--ease-out) both;
+}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+#cookie-box h3{font-size:.95rem;font-weight:700;margin-bottom:.45rem}
+#cookie-box p{font-size:.8rem;color:var(--muted);max-width:900px;margin-bottom:1rem;line-height:1.55}
+.ck-row{display:flex;flex-wrap:wrap;gap:.55rem;align-items:center}
+.ck-btn{padding:.46rem 1.2rem;font-family:var(--font);font-size:.8rem;font-weight:700;border-radius:3px;border:2px solid transparent;cursor:pointer;transition:.2s}
+.ck-accept{background:var(--green);color:#fff;border-color:var(--green)}
+.ck-accept:hover{background:var(--green-d);border-color:var(--green-d)}
+.ck-reject{background:transparent;color:var(--text);border-color:var(--border)}
+.ck-reject:hover{border-color:#999}
+.ck-link{background:none;border:none;font-size:.75rem;color:var(--muted);text-decoration:underline;cursor:pointer}
+
+/* ═══════════════════════════════════
+   TOP BAR
+═══════════════════════════════════ */
+.top-bar{background:var(--green-d);color:rgba(255,255,255,.78);font-size:.73rem;text-align:center;padding:.3rem 1rem;letter-spacing:.04em}
+.top-bar a{color:rgba(255,255,255,.9)}
+.top-bar a:hover{color:#fff;text-decoration:none}
+
+/* ═══════════════════════════════════
+   HEADER
+═══════════════════════════════════ */
+header{
+  background:var(--white);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:500;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
+  transition:box-shadow .3s;
+}
+header.scrolled{box-shadow:0 4px 20px rgba(0,0,0,.12)}
+.header-inner{
+  max-width:1180px;margin:0 auto;
+  display:flex;align-items:stretch;
+  height:var(--nav-h);padding:0 1.25rem;
+}
+.logo-link{display:flex;align-items:center;flex-shrink:0;margin-right:.75rem;padding:.4rem 0;gap:.65rem}
+/* SVG logo — cercles multicolores */
+.logo-mark{width:50px;height:50px;flex-shrink:0}
+.logo-words .lw-main{display:block;font-size:1.3rem;font-weight:700;color:var(--green);letter-spacing:-.01em;line-height:1.1}
+.logo-words .lw-sub{display:block;font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+
+/* Nav */
+#main-nav{display:flex;align-items:stretch;list-style:none;margin-left:auto;gap:0}
+.ni{display:flex;align-items:stretch;position:relative}
+.ni>a,.ni>button{
+  display:flex;align-items:center;gap:.22rem;
+  padding:0 .85rem;font-family:var(--font);font-size:.845rem;font-weight:600;
+  color:var(--text);text-decoration:none;background:none;border:none;cursor:pointer;
+  white-space:nowrap;border-bottom:3px solid transparent;
+  transition:color .18s,border-color .18s;
+}
+.ni>a:hover,.ni>button:hover,.ni.active>a,.ni.active>button{
+  color:var(--green);border-bottom-color:var(--green);text-decoration:none
+}
+.caret{font-size:.58rem;opacity:.55;transition:transform .2s}
+.ni:hover .caret{transform:rotate(180deg)}
+
+.dropdown{
+  position:absolute;top:calc(100% + 1px);left:0;
+  background:var(--white);border:1px solid var(--border);
+  border-top:3px solid var(--green);min-width:228px;z-index:600;
+  box-shadow:0 8px 24px rgba(0,0,0,.11);
+  opacity:0;pointer-events:none;
+  transform:translateY(-8px);
+  transition:opacity .18s,transform .18s;
+}
+.ni:hover .dropdown{opacity:1;pointer-events:auto;transform:translateY(0)}
+.dropdown a{display:block;padding:.6rem 1.05rem;font-size:.83rem;color:var(--text);border-bottom:1px solid #f0f0f0;transition:background .14s,color .14s}
+.dropdown a:last-child{border-bottom:none}
+.dropdown a:hover{background:var(--green-l);color:var(--green);text-decoration:none}
+
+.nav-icon-btn{display:flex;align-items:center;padding:0 .7rem;background:none;border:none;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;transition:color .18s}
+.nav-icon-btn:hover{color:var(--green)}
+
+#burger{display:none;background:none;border:none;cursor:pointer;padding:.4rem;margin-left:auto;flex-direction:column;gap:5px;align-items:center;justify-content:center}
+#burger span{display:block;width:25px;height:2px;background:var(--text);border-radius:2px;transition:.3s}
+body.mopen #burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+body.mopen #burger span:nth-child(2){opacity:0}
+body.mopen #burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* ═══════════════════════════════════
+   SEARCH OVERLAY
+═══════════════════════════════════ */
+#search-overlay{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.6);display:flex;align-items:flex-start;justify-content:center;padding-top:calc(var(--nav-h) + 1.8rem);opacity:0;pointer-events:none;transition:opacity .2s}
+#search-overlay.open{opacity:1;pointer-events:auto}
+#search-box{background:var(--white);padding:1.1rem 1.3rem;border-radius:6px;width:100%;max-width:560px;display:flex;gap:.6rem;box-shadow:0 8px 32px rgba(0,0,0,.22)}
+#search-input{flex:1;border:1px solid var(--border);border-radius:4px;padding:.5rem .85rem;font-family:var(--font);font-size:.9rem;outline:none}
+#search-input:focus{border-color:var(--green)}
+#search-submit{background:var(--green);color:#fff;border:none;padding:.5rem 1.05rem;border-radius:4px;cursor:pointer;font-weight:700;font-size:.88rem;transition:background .2s}
+#search-submit:hover{background:var(--green-d)}
+
+/* ═══════════════════════════════════
+   HERO
+═══════════════════════════════════ */
+.hero{
+  background:linear-gradient(140deg, #2e5a28 0%, #4a8a3d 45%, #6db85e 100%);
+  color:var(--white);min-height:420px;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:5rem 1.5rem 5rem;
+  position:relative;overflow:hidden;
+}
+/* Animated floating circles in bg */
+.hero-bubble{position:absolute;border-radius:50%;opacity:.12;animation:floatBubble linear infinite}
+@keyframes floatBubble{
+  0%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-30px) scale(1.05)}
+  100%{transform:translateY(0) scale(1)}
+}
+.hero-content{position:relative;z-index:2;max-width:680px}
+.hero h1{
+  font-size:clamp(2.1rem,5vw,3.6rem);font-weight:700;line-height:1.12;
+  margin-bottom:.7rem;
+  animation:heroIn .9s var(--ease-out) .1s both;
+}
+.hero h2{
+  font-size:clamp(.95rem,2.2vw,1.2rem);font-weight:300;opacity:.9;
+  animation:heroIn .9s var(--ease-out) .28s both;
+}
+@keyframes heroIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+/* wave bottom */
+.hero-wave{position:absolute;bottom:-1px;left:0;right:0;line-height:0;z-index:1}
+.hero-wave svg{display:block;width:100%;height:70px}
+
+/* ═══════════════════════════════════
+   SECTION SHAPES / DIVIDERS
+═══════════════════════════════════ */
+.wave-divider{line-height:0;overflow:hidden;position:relative;z-index:2}
+.wave-divider svg{display:block;width:100%}
+
+/* ═══════════════════════════════════
+   DOMAINS SECTION
+═══════════════════════════════════ */
+.domains-section{background:var(--white);padding:3.5rem 1.25rem 0}
+.wrap{max-width:1180px;margin:0 auto;padding-left:1.25rem;padding-right:1.25rem}
+.section-heading{
+  font-size:clamp(1.5rem,2.8vw,2.1rem);font-weight:700;color:var(--text);
+  margin-bottom:2.4rem;text-align:center;position:relative;padding-bottom:.9rem;
+}
+.section-heading::after{content:'';display:block;width:52px;height:3px;background:var(--green);position:absolute;bottom:0;left:50%;transform:translateX(-50%);border-radius:2px}
+
+.domains-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1.6rem;max-width:1100px;margin:0 auto;
+}
+.domain-card{
+  background:var(--white);border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;text-decoration:none;color:var(--text);
+  transition:box-shadow .28s,transform .28s;
+  display:flex;flex-direction:column;
+  opacity:0;transform:translateY(32px);
+  transition:opacity .55s ease,transform .55s ease,box-shadow .28s,filter .28s;
+}
+.domain-card.visible{opacity:1;transform:translateY(0)}
+.domain-card:hover{box-shadow:0 10px 36px rgba(91,158,77,.24);transform:translateY(-4px)}
+.domain-card:hover .dc-img-inner{transform:scale(1.06)}
+
+.dc-img{width:100%;aspect-ratio:1/1;overflow:hidden;position:relative}
+.dc-img-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;transition:transform .45s ease}
+.dc1{background:linear-gradient(135deg,#c8e6b0,#d8f0c0)}
+.dc2{background:linear-gradient(135deg,#fde0b0,#fdf0d0)}
+.dc3{background:linear-gradient(135deg,#b8d4f0,#c8e4f8)}
+.dc4{background:linear-gradient(135deg,#b8e8b8,#d0f0d0)}
+.dc5{background:linear-gradient(135deg,#e8c8f0,#f8d8f8)}
+.dc6{background:linear-gradient(135deg,#f0deb8,#fcecd0)}
+
+.domain-card h3{
+  padding:.85rem 1rem 1rem;font-size:.98rem;font-weight:700;
+  color:var(--text);line-height:1.35;text-align:center;
+}
+.domain-card h3::before{
+  content:'';display:block;width:30px;height:2px;
+  background:var(--green);margin:0 auto .5rem;border-radius:2px;
+}
+
+/* ═══════════════════════════════════
+   CURVED SECTION BETWEEN DOMAINS & CTA
+═══════════════════════════════════ */
+.curve-green{background:var(--white);line-height:0}
+.curve-green svg{display:block;width:100%}
+
+/* ═══════════════════════════════════
+   CTA BAND
+═══════════════════════════════════ */
+.cta-band{
+  background:var(--green);color:var(--white);
+  text-align:center;padding:3.5rem 1.5rem;
+  position:relative;overflow:hidden;
+}
+/* subtle radial shine */
+.cta-band::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 40%,rgba(255,255,255,.08) 0%,transparent 70%);pointer-events:none}
+.cta-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;margin-bottom:.6rem;opacity:.78}
+.cta-band p{font-size:clamp(1rem,2.2vw,1.2rem);font-weight:300;max-width:760px;margin:0 auto;line-height:1.78}
+.cta-band strong{font-weight:700}
+
+/* ═══════════════════════════════════
+   HANDS ANIMATION SECTION
+═══════════════════════════════════ */
+.hands-section{
+  /*background:var(--green);*/
+  padding:0 0 0 0;
+  position:relative;overflow:hidden;
+  min-height:260px;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+/* wavy top (flips the white wave) */
+.hands-wave-top{position:absolute;top:-1px;left:0;right:0;line-height:0;z-index:2}
+.hands-wave-top svg{display:block;width:100%}
+
+/* The hands stage */
+.hands-stage{
+  /*width:100%;max-width:900px;
+  padding-top:80px;
+  position:relative;z-index:3;
+  display:flex;align-items:flex-end;justify-content:center;
+  gap:0;*/
+    padding-top: 40px;
+    width: 85%;
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0;
+
+
+}
+
+/* Each hand SVG wrapper */
+.hand-wrap{
+  flex:0 0 auto;
+  opacity:0;transform:translateY(110px);
+  animation:riseHand .9s var(--ease-out) both;
+}
+.hand-wrap:nth-child(1){animation-delay:.05s}
+.hand-wrap:nth-child(2){animation-delay:.18s}
+.hand-wrap:nth-child(3){animation-delay:.31s}
+.hand-wrap:nth-child(4){animation-delay:.44s}
+.hand-wrap:nth-child(5){animation-delay:.57s}
+.hand-wrap:nth-child(6){animation-delay:.70s}
+.hand-wrap:nth-child(7){animation-delay:.83s}
+.hand-wrap:nth-child(8){animation-delay:.96s}
+
+@keyframes riseHand{
+  0%{opacity:0;transform:translateY(110px)}
+  60%{opacity:1}
+  100%{opacity:1;transform:translateY(0)}
+}
+/* paused until section enters viewport */
+.hands-section:not(.animated) .hand-wrap{animation-play-state:paused}
+.hands-section.animated .hand-wrap{animation-play-state:running}
+
+/* idle float after rise */
+.hand-wrap.floated{
+  display: block;
+  animation:floatHand 3s ease-out-in !important}/* put ease-in-out if you want to hide hands after raise them */
+@keyframes floatHand{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+.hand-wrap:nth-child(even).floated{animation-delay:-.8s}
+.hand-wrap:nth-child(3n).floated{animation-delay:-1.6s}
+
+/* wave bottom of hands section → footer */
+.hands-wave-bottom{line-height:0;background:var(--green)}
+.hands-wave-bottom svg{display:block;width:100%}
+
+/* ═══════════════════════════════════
+   FOOTER
+═══════════════════════════════════ */
+footer{background:#242424;color:#b0b0b0;padding:3rem 1.25rem 0;font-size:.83rem}
+.footer-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:2fr 1.2fr 1.6fr 1fr;gap:2.5rem;padding-bottom:2.8rem}
+footer h4{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#fff;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid #3a3a3a}
+footer address{font-style:normal;line-height:1.9}
+footer address strong{color:#e0e0e0}
+footer ul{list-style:none}
+footer ul li{margin-bottom:.3rem}
+footer ul li ul{margin-top:.3rem;padding-left:.85rem}
+footer a{color:#999;transition:color .15s}
+footer a:hover{color:#fff;text-decoration:none}
+.footer-search{display:flex;gap:.5rem}
+.footer-search input{flex:1;border:1px solid #444;background:#333;color:#eee;padding:.44rem .75rem;border-radius:4px;font-family:var(--font);font-size:.8rem;outline:none}
+.footer-search input:focus{border-color:var(--green)}
+.footer-bottom{max-width:1180px;margin:0 auto;border-top:1px solid #333;padding:1rem 0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;font-size:.74rem;color:#555}
+.footer-bottom a{color:#666}
+.footer-bottom a:hover{color:#bbb}
+
+/* ═══════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════ */
+@media(max-width:960px){
+  .domains-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:700px){
+  #burger{display:flex}
+  #main-nav{
+    display:none;flex-direction:column;
+    position:absolute;top:var(--nav-h);left:0;right:0;
+    background:var(--white);border-top:2px solid var(--green);
+    box-shadow:0 8px 20px rgba(0,0,0,.13);
+    padding:.5rem 0 1rem;gap:0;z-index:499;
+  }
+  #main-nav.open{display:flex}
+  .ni{flex-direction:column;align-items:stretch}
+  .ni>a,.ni>button{padding:.7rem 1.25rem;border-bottom:none;border-radius:0;justify-content:space-between}
+  .ni>a:hover,.ni>button:hover{background:var(--green-l);border-bottom:none}
+  .dropdown{position:static;opacity:1;pointer-events:auto;transform:none;box-shadow:none;border:none;border-top:1px solid var(--border);display:none}
+  .ni.mopen .dropdown{display:block}
+  .domains-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .hero{min-height:300px}
+  .hands-stage{gap:0}
+  .hand-wrap svg{width:80px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ COOKIE ══ -->
+<div id="cookie-overlay" role="dialog" aria-modal="true" aria-label="Gestion des cookies">
+  <div id="cookie-box">
+    <h3>Gérer le consentement aux cookies</h3>
+    <p>Pour vous offrir les meilleures expériences, nous utilisons des technologies telles que les cookies pour stocker et/ou accéder aux informations des appareils. Le fait de consentir à ces technologies nous permettra de traiter des données telles que le comportement de navigation ou les identifiants uniques sur ce site. Le fait de ne pas consentir ou de retirer son consentement peut avoir un effet négatif sur certaines caractéristiques et fonctions.</p>
+    <div class="ck-row">
+      <button class="ck-btn ck-accept" onclick="closeCookie()">Accepter</button>
+      <button class="ck-btn ck-reject" onclick="closeCookie()">Refuser</button>
+      <button class="ck-link" onclick="closeCookie()">Voir les préférences &rsaquo;</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SEARCH OVERLAY ══ -->
+<div id="search-overlay" onclick="closeSearch()">
+  <div id="search-box" onclick="event.stopPropagation()">
+    <input type="text" id="search-input" placeholder="Rechercher sur le site…" autocomplete="off"/>
+    <button id="search-submit">Rechercher</button>
+  </div>
+</div>
+
+<!-- ══ TOP BAR ══ -->
+<div class="top-bar">
+  Centre spécialisé pour l'éducation interculturelle &amp; le conseil &nbsp;·&nbsp;
+  <a href="mailto:info@fibb-ev.de">info@fibb-ev.de</a>
+  &nbsp;·&nbsp; Landsberger Straße 63 · D-53119 Bonn
+</div>
+
+<!-- ══ HEADER ══ -->
+<header id="site-header">
+  <div class="header-inner">
+    <a href="#" class="logo-link" aria-label="FiBB e.V. — Accueil">
+      <!-- Logo SVG: 4 cercles colorés se chevauchant -->
+      <svg class="logo-mark" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="15" cy="15" r="12" fill="#e07b1a" opacity=".9"/>
+        <circle cx="35" cy="15" r="12" fill="#5b9e4d" opacity=".9"/>
+        <circle cx="15" cy="35" r="12" fill="#3d80c4" opacity=".9"/>
+        <circle cx="35" cy="35" r="12" fill="#c45b5b" opacity=".9"/>
+        <circle cx="25" cy="15" r="6"  fill="#c46b12" opacity=".55"/>
+        <circle cx="15" cy="25" r="6"  fill="#2e6228" opacity=".55"/>
+        <circle cx="35" cy="25" r="6"  fill="#7a3080" opacity=".55"/>
+        <circle cx="25" cy="35" r="6"  fill="#2a5e9c" opacity=".55"/>
+        <circle cx="25" cy="25" r="5.5" fill="#fff" opacity=".9"/>
+      </svg>
+      <div class="logo-words">
+        <span class="lw-main">FiBB e.V.</span>
+        <span class="lw-sub">Éducation interculturelle</span>
+      </div>
+    </a>
+
+    <button id="burger" aria-label="Ouvrir le menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+
+    <ul id="main-nav" role="list">
+      <li class="ni active"><a href="#">Accueil</a></li>
+
+      <li class="ni" id="ni-fibb">
+        <button onclick="mobToggle('ni-fibb')">FiBB e.V.<span class="caret"> ▾</span></button>
+        <div class="dropdown">
+          <a href="#">Profil</a>
+          <a href="#">Équipe</a>
+          <a href="#">Coopérations</a>
+        </div>
+      </li>
+
+      <li class="ni" id="ni-dom">
+        <button onclick="mobToggle('ni-dom')">Nos domaines<span class="caret"> ▾</span></button>
+        <div class="dropdown">
+          <a href="#">Éducation familiale</a>
+          <a href="#">Compétences médiatiques</a>
+          <a href="#">Éducation des jeunes</a>
+          <a href="#">Nature &amp; environnement</a>
+          <a href="#">Multilinguisme</a>
+          <a href="#">Travail sans préjugés</a>
+        </div>
+      </li>
+
+      <li class="ni"><a href="#">Offres</a></li>
+
+      <li class="ni" id="ni-pub">
+        <button onclick="mobToggle('ni-pub')">Relations publiques<span class="caret"> ▾</span></button>
+        <div class="dropdown">
+          <a href="#">Calendrier de la diversité</a>
+          <a href="#">Publications</a>
+          <a href="#">Rapports d'activité</a>
+          <a href="#">Communiqués de presse</a>
+        </div>
+      </li>
+
+      <li class="ni">
+        <button class="nav-icon-btn" onclick="openSearch()" aria-label="Rechercher">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="hero">
+  <!-- Floating background bubbles -->
+  <div class="hero-bubble" style="width:180px;height:180px;background:#fff;top:10%;left:5%;animation-duration:6s;animation-delay:0s"></div>
+  <div class="hero-bubble" style="width:100px;height:100px;background:#fff;top:20%;right:8%;animation-duration:7.5s;animation-delay:-2s"></div>
+  <div class="hero-bubble" style="width:60px;height:60px;background:#fff;bottom:25%;left:15%;animation-duration:5s;animation-delay:-1s"></div>
+  <div class="hero-bubble" style="width:140px;height:140px;background:#fff;bottom:15%;right:10%;animation-duration:8s;animation-delay:-3s"></div>
+
+  <div class="hero-content">
+    <h1>La diversité est notre force.</h1>
+    <h2>Éducation avec l'approche Anti-Biais</h2>
+  </div>
+
+  <!-- Wave bottom -->
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 70" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,10 1440,40 L1440,70 L0,70 Z" fill="#ffffff"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ══ DOMAINS ══ -->
+<section class="domains-section" id="domains">
+  <div style="max-width:1100px;margin:0 auto;padding:0 1.25rem">
+    <h2 class="section-heading reveal-title">Nos domaines de travail</h2>
+    <div class="domains-grid">
+
+      <a href="#" class="domain-card">
+        <div class="dc-img"><div class="dc-img-inner dc1">
+          <svg width="110" height="110" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+            <!-- Family: parents + child -->
+            <circle cx="55" cy="22" r="13" fill="#3d7035" opacity=".8"/>
+            <path d="M30 70 Q30 50 55 46 Q80 50 80 70" fill="#3d7035" opacity=".7"/>
+            <circle cx="28" cy="38" r="9" fill="#5b9e4d" opacity=".75"/>
+            <path d="M10 72 Q10 56 28 52 Q46 56 46 72" fill="#5b9e4d" opacity=".65"/>
+            <circle cx="82" cy="38" r="9" fill="#5b9e4d" opacity=".75"/>
+            <path d="M64 72 Q64 56 82 52 Q100 56 100 72" fill="#5b9e4d" opacity=".65"/>
+            <line x1="20" y1="82" x2="90" y2="82" stroke="#3d7035" stroke-width="3" stroke-linecap="round" opacity=".4"/>
+          </svg>
+        </div></div>
+        <h3>Éducation familiale</h3>
+      </a>
+
+      <a href="#" class="domain-card">
+        <div class="dc-img"><div class="dc-img-inner dc2">
+          <svg width="110" height="110" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+            <!-- Screen + play button -->
+            <rect x="12" y="22" width="86" height="54" rx="7" fill="none" stroke="#c47a18" stroke-width="5"/>
+            <polygon points="43,35 43,63 75,49" fill="#c47a18" opacity=".85"/>
+            <rect x="36" y="80" width="38" height="6" rx="3" fill="#c47a18" opacity=".6"/>
+            <line x1="22" y1="88" x2="88" y2="88" stroke="#c47a18" stroke-width="4" stroke-linecap="round" opacity=".4"/>
+          </svg>
+        </div></div>
+        <h3>Compétences médiatiques</h3>
+      </a>
+
+      <a href="#" class="domain-card">
+        <div class="dc-img"><div class="dc-img-inner dc3">
+          <svg width="110" height="110" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+            <!-- Two young figures -->
+            <circle cx="37" cy="26" r="11" fill="#2d6ba6" opacity=".85"/>
+            <path d="M16,72 Q16,50 37,46 Q58,50 58,72" fill="#2d6ba6" opacity=".75"/>
+            <circle cx="73" cy="30" r="9.5" fill="#3d80c4" opacity=".8"/>
+            <path d="M54,74 Q54,54 73,50 Q92,54 92,74" fill="#3d80c4" opacity=".7"/>
+            <!-- Star accent -->
+            <polygon points="55,16 57,22 63,22 58,26 60,32 55,28 50,32 52,26 47,22 53,22" fill="#f0c040" opacity=".8"/>
+          </svg>
+        </div></div>
+        <h3>Éducation des jeunes</h3>
+      </a>
+
+      <a href="#" class="domain-card">
+        <div class="dc-img"><div class="dc-img-inner dc4">
+          <svg width="110" height="110" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+            <!-- Leaf / tree -->
+            <path d="M55 90 Q55 60 80 30 Q66 52 68 65 Q60 50 55 40 Q50 50 42 65 Q44 52 30 30 Q55 60 55 90Z" fill="#2a7030" opacity=".85"/>
+            <line x1="55" y1="90" x2="55" y2="100" stroke="#2a7030" stroke-width="5" stroke-linecap="round"/>
+            <!-- Sun -->
+            <circle cx="80" cy="22" r="10" fill="#f0c040" opacity=".8"/>
+            <line x1="80" y1="8" x2="80" y2="4"  stroke="#f0c040" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="80" y1="36" x2="80" y2="40" stroke="#f0c040" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="66" y1="22" x2="62" y2="22" stroke="#f0c040" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="94" y1="22" x2="98" y2="22" stroke="#f0c040" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="70" y1="12" x2="67" y2="9"  stroke="#f0c040" stroke-width="2" stroke-linecap="round"/>
+            <line x1="90" y1="32" x2="93" y2="35" stroke="#f0c040" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div></div>
+        <h3>Éducation à la nature et à l'environnement</h3>
+      </a>
+
+      <a href="#" class="domain-card">
+        <div class="dc-img"><div class="dc-img-inner dc5">
+          <svg width="110" height="110" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+            <!-- Globe + speech bubbles -->
+            <circle cx="55" cy="55" r="30" fill="none" stroke="#8e3b8e" stroke-width="4.5"/>
+            <ellipse cx="55" cy="55" rx="13" ry="30" fill="none" stroke="#8e3b8e" stroke-width="3"/>
+            <line x1="25" y1="42" x2="85" y2="42" stroke="#8e3b8e" stroke-width="3"/>
+            <line x1="25" y1="68" x2="85" y2="68" stroke="#8e3b8e" stroke-width="3"/>
+            <!-- Speech bubble -->
+            <rect x="60" y="14" width="28" height="18" rx="5" fill="#8e3b8e" opacity=".75"/>
+            <polygon points="64,32 64,38 70,32" fill="#8e3b8e" opacity=".75"/>
+            <rect x="22" y="16" width="22" height="14" rx="4" fill="#c45b8e" opacity=".65"/>
+            <polygon points="38,30 38,36 32,30" fill="#c45b8e" opacity=".65"/>
+          </svg>
+        </div></div>
+        <h3>Multilinguisme</h3>
+      </a>
+
+      <a href="#" class="domain-card">
+        <div class="dc-img"><div class="dc-img-inner dc6">
+          <svg width="110" height="110" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+            <!-- 3 circles + hands connecting -->
+            <circle cx="30" cy="38" r="14" fill="#e07b1a" opacity=".8"/>
+            <circle cx="80" cy="38" r="14" fill="#5b9e4d" opacity=".8"/>
+            <circle cx="55" cy="76" r="14" fill="#3d80c4" opacity=".8"/>
+            <line x1="30" y1="52" x2="55" y2="62" stroke="#c47a18" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="80" y1="52" x2="55" y2="62" stroke="#3d7035" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="30" y1="38" x2="80" y2="38" stroke="#888" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
+          </svg>
+        </div></div>
+        <h3>Travailler sans préjugés</h3>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ CURVE : domains → CTA ══ -->
+<div class="wave-divider" style="background:var(--white);margin-top:3.5rem">
+  <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:80px">
+    <path d="M0,0 C360,80 1080,0 1440,60 L1440,80 L0,80 Z" fill="#5b9e4d"/>
+  </svg>
+</div>
+
+<!-- ══ CTA BAND ══ -->
+<section class="cta-band" id="cta">
+  <div class="cta-label">Ce qui nous tient à cœur !</div>
+  <p>
+    Dans notre travail éducatif, dans toutes nos offres, projets et programmes,
+    nous travaillons de manière <strong>consciente des préjugés</strong>.
+    Nous veillons à toutes les facettes de la diversité sociale et à une participation égale pour tous.
+  </p>
+</section>
+
+<!-- ══ CURVE : CTA → hands ══ -->
+<div class="wave-divider" style="background:var(--green)">
+  <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:60px">
+    <path d="M0,60 C480,0 960,60 1440,20 L1440,60 L0,60 Z" fill="#5b9e4d"/>
+  </svg>
+</div>
+
+<!-- ══ HANDS SECTION ══ -->
+<section class="hands-section" id="hands-section">
+  <!-- top wave (white → green transition) -->
+  <div class="hands-wave-top">
+    <svg viewBox="0 0 1440 55" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:55px">
+      <path d="M0,30 C360,60 1080,0 1440,35 L1440,0 L0,0 Z" fill="#5b9e4d"/>
+    </svg>
+  </div>
+
+  <div class="hands-stage" id="hands-stage">
+
+    <!-- 8 hands, alternating skin tones & heights -->
+
+    <!-- Hand 1 -->
+    <div class="hand-wrap" style="animation-delay:.05s">
+      <svg width="100" height="220" viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(50,210)">
+          <!-- arm -->
+          <rect x="-14" y="-130" width="28" height="130" rx="12" fill="#c87941"/>
+          <!-- palm -->
+          <ellipse cx="0" cy="-138" rx="17" ry="15" fill="#c87941"/>
+          <!-- fingers -->
+          <rect x="-13" y="-195" width="11" height="60" rx="6" fill="#c87941"/>
+          <rect x="-2"  y="-205" width="11" height="70" rx="6" fill="#c87941"/>
+          <rect x="9"   y="-198" width="11" height="62" rx="6" fill="#c87941"/>
+          <rect x="20"  y="-182" width="10" height="48" rx="5" fill="#c87941"/>
+          <!-- thumb -->
+          <rect x="-26" y="-165" width="10" height="34" rx="5" fill="#c87941" transform="rotate(-20,-21,-148)"/>
+          <!-- sleeve -->
+          <rect x="-18" y="-8" width="36" height="18" rx="4" fill="#e07b1a"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Hand 2 — dark skin -->
+    <div class="hand-wrap" style="animation-delay:.18s;margin-top:30px">
+      <svg width="95" height="200" viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(50,210)">
+          <rect x="-13" y="-120" width="26" height="120" rx="11" fill="#5c3317"/>
+          <ellipse cx="0" cy="-128" rx="16" ry="14" fill="#5c3317"/>
+          <rect x="-12" y="-185" width="10" height="58" rx="5" fill="#5c3317"/>
+          <rect x="-2"  y="-194" width="10" height="67" rx="5" fill="#5c3317"/>
+          <rect x="8"   y="-188" width="10" height="61" rx="5" fill="#5c3317"/>
+          <rect x="18"  y="-173" width="9"  height="47" rx="4.5" fill="#5c3317"/>
+          <rect x="-24" y="-155" width="9" height="32" rx="4.5" fill="#5c3317" transform="rotate(-18,-19,-139)"/>
+          <rect x="-17" y="-6" width="34" height="16" rx="4" fill="#3d7035"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Hand 3 — light skin, sleeve rouge -->
+    <div class="hand-wrap" style="animation-delay:.31s">
+      <svg width="100" height="215" viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(50,210)">
+          <rect x="-13" y="-125" width="26" height="125" rx="11" fill="#f0c090"/>
+          <ellipse cx="0" cy="-133" rx="16" ry="14" fill="#f0c090"/>
+          <rect x="-12" y="-192" width="10" height="60" rx="5" fill="#f0c090"/>
+          <rect x="-2"  y="-200" width="10" height="68" rx="5" fill="#f0c090"/>
+          <rect x="8"   y="-193" width="10" height="61" rx="5" fill="#f0c090"/>
+          <rect x="18"  y="-178" width="9"  height="47" rx="4.5" fill="#f0c090"/>
+          <rect x="-24" y="-160" width="9" height="32" rx="4.5" fill="#f0c090" transform="rotate(-20,-19,-144)"/>
+          <rect x="-17" y="-6" width="34" height="16" rx="4" fill="#c45b5b"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Hand 4 — medium, sleeve bleu -->
+    <div class="hand-wrap" style="animation-delay:.44s;margin-top:20px">
+      <svg width="96" height="208" viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(50,210)">
+          <rect x="-13" y="-122" width="26" height="122" rx="11" fill="#a0622a"/>
+          <ellipse cx="0" cy="-130" rx="16" ry="14" fill="#a0622a"/>
+          <rect x="-12" y="-188" width="10" height="59" rx="5" fill="#a0622a"/>
+          <rect x="-2"  y="-197" width="10" height="68" rx="5" fill="#a0622a"/>
+          <rect x="8"   y="-190" width="10" height="61" rx="5" fill="#a0622a"/>
+          <rect x="18"  y="-175" width="9"  height="47" rx="4.5" fill="#a0622a"/>
+          <rect x="-24" y="-157" width="9" height="31" rx="4.5" fill="#a0622a" transform="rotate(-18,-19,-141)"/>
+          <rect x="-17" y="-6" width="34" height="16" rx="4" fill="#3d80c4"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Hand 5 — dark, sleeve vert -->
+    <div class="hand-wrap" style="animation-delay:.57s">
+      <svg width="100" height="218" viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(50,210)">
+          <rect x="-13" y="-127" width="26" height="127" rx="11" fill="#3a1f0a"/>
+          <ellipse cx="0" cy="-135" rx="16" ry="14" fill="#3a1f0a"/>
+          <rect x="-12" y="-193" width="10" height="59" rx="5" fill="#3a1f0a"/>
+          <rect x="-2"  y="-202" width="10" height="68" rx="5" fill="#3a1f0a"/>
+          <rect x="8"   y="-195" width="10" height="61" rx="5" fill="#3a1f0a"/>
+          <rect x="18"  y="-180" width="9"  height="47" rx="4.5" fill="#3a1f0a"/>
+          <rect x="-24" y="-162" width="9" height="31" rx="4.5" fill="#3a1f0a" transform="rotate(-18,-19,-146)"/>
+          <rect x="-17" y="-6" width="34" height="16" rx="4" fill="#5b9e4d"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Hand 6 — light, sleeve violet -->
+    <div class="hand-wrap" style="animation-delay:.70s;margin-top:25px">
+      <svg width="96" height="205" viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(50,210)">
+          <rect x="-13" y="-119" width="26" height="119" rx="11" fill="#e8b080"/>
+          <ellipse cx="0" cy="-127" rx="16" ry="14" fill="#e8b080"/>
+          <rect x="-12" y="-184" width="10" height="58" rx="5" fill="#e8b080"/>
+          <rect x="-2"  y="-193" width="10" height="67" rx="5" fill="#e8b080"/>
+          <rect x="8"   y="-186" width="10" height="60" rx="5" fill="#e8b080"/>
+          <rect x="18"  y="-171" width="9"  height="46" rx="4.5" fill="#e8b080"/>
+          <rect x="-24" y="-153" width="9" height="30" rx="4.5" fill="#e8b080" transform="rotate(-20,-19,-137)"/>
+          <rect x="-17" y="-6" width="34" height="16" rx="4" fill="#8e3b8e"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Hand 7 — medium brown -->
+    <div class="hand-wrap" style="animation-delay:.83s">
+      <svg width="100" height="212" viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(50,210)">
+          <rect x="-13" y="-124" width="26" height="124" rx="11" fill="#8b4a20"/>
+          <ellipse cx="0" cy="-132" rx="16" ry="14" fill="#8b4a20"/>
+          <rect x="-12" y="-190" width="10" height="59" rx="5" fill="#8b4a20"/>
+          <rect x="-2"  y="-199" width="10" height="68" rx="5" fill="#8b4a20"/>
+          <rect x="8"   y="-192" width="10" height="61" rx="5" fill="#8b4a20"/>
+          <rect x="18"  y="-177" width="9"  height="47" rx="4.5" fill="#8b4a20"/>
+          <rect x="-24" y="-159" width="9" height="31" rx="4.5" fill="#8b4a20" transform="rotate(-18,-19,-143)"/>
+          <rect x="-17" y="-6" width="34" height="16" rx="4" fill="#e07b1a"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Hand 8 — pale, sleeve bleu foncé -->
+    <div class="hand-wrap" style="animation-delay:.96s;margin-top:15px">
+      <svg width="96" height="200" viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(50,210)">
+          <rect x="-13" y="-118" width="26" height="118" rx="11" fill="#f5d5b0"/>
+          <ellipse cx="0" cy="-126" rx="16" ry="14" fill="#f5d5b0"/>
+          <rect x="-12" y="-182" width="10" height="57" rx="5" fill="#f5d5b0"/>
+          <rect x="-2"  y="-191" width="10" height="66" rx="5" fill="#f5d5b0"/>
+          <rect x="8"   y="-184" width="10" height="59" rx="5" fill="#f5d5b0"/>
+          <rect x="18"  y="-169" width="9"  height="45" rx="4.5" fill="#f5d5b0"/>
+          <rect x="-24" y="-151" width="9" height="30" rx="4.5" fill="#f5d5b0" transform="rotate(-20,-19,-135)"/>
+          <rect x="-17" y="-6" width="34" height="16" rx="4" fill="#2d4a8a"/>
+        </g>
+      </svg>
+    </div>
+
+  </div><!-- /hands-stage -->
+</section>
+
+<!-- ══ WAVE hands→footer ══ -->
+<div class="hands-wave-bottom">
+  <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:60px">
+    <path d="M0,20 C360,70 1080,0 1440,40 L1440,60 L0,60 Z" fill="#242424"/>
+  </svg>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>Plan du site</h4>
+      <ul>
+        <li><a href="#">Accueil</a></li>
+        <li><a href="#">FiBB e.V.</a>
+          <ul>
+            <li><a href="#">Profil</a></li>
+            <li><a href="#">Équipe</a></li>
+            <li><a href="#">Coopérations</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Nos domaines de travail</a>
+          <ul>
+            <li><a href="#">Éducation familiale</a></li>
+            <li><a href="#">Compétences médiatiques</a></li>
+            <li><a href="#">Éducation des jeunes</a></li>
+            <li><a href="#">Nature &amp; environnement</a></li>
+            <li><a href="#">Multilinguisme</a></li>
+            <li><a href="#">Travail sans préjugés</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Offres</a></li>
+        <li><a href="#">Relations publiques</a>
+          <ul>
+            <li><a href="#">Calendrier de la diversité</a></li>
+            <li><a href="#">Publications</a></li>
+            <li><a href="#">Rapports d'activité</a></li>
+            <li><a href="#">Communiqués de presse</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Politique de confidentialité</a></li>
+        <li><a href="#">Politique sur les cookies (UE)</a></li>
+        <li><a href="#">Mentions légales</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Contact</h4>
+      <address>
+        <strong>Centre spécialisé pour l'éducation interculturelle et le conseil FiBB e.V.</strong><br><br>
+        Landsberger Straße 63<br>D-53119 Bonn<br><br>
+        E-mail : <a href="mailto:info@fibb-ev.de">info@fibb-ev.de</a>
+      </address>
+    </div>
+
+    <div>
+      <h4>Coordonnées bancaires</h4>
+      <address>
+        Fachstelle für interkulturelle Bildung und Beratung – FiBB e.V.<br><br>
+        Volksbank KölnBonn<br>
+        IBAN : DE 7038 0601 8615 0111 4010<br>
+        BIC : GENODED1BRS
+      </address>
+    </div>
+
+    <div>
+      <h4>Recherche</h4>
+      <div class="footer-search">
+        <input type="text" placeholder="Rechercher…"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© FiBB e.V. – La diversité est notre force.</span>
+    <span>
+      <a href="#">Mentions légales</a> &nbsp;·&nbsp;
+      <a href="#">Confidentialité</a> &nbsp;·&nbsp;
+      <a href="#">Cookies</a>
+    </span>
+  </div>
+</footer>
+
+<!-- ══ JS ══ -->
+<script>
+/* Cookie */
+function closeCookie(){
+  const o=document.getElementById('cookie-overlay');
+  o.classList.add('hidden');
+  setTimeout(()=>o.style.display='none',380);
+}
+
+/* Header shadow on scroll */
+window.addEventListener('scroll',()=>{
+  document.getElementById('site-header').classList.toggle('scrolled',window.scrollY>10);
+});
+
+/* Mobile menu */
+function toggleMenu(){
+  document.body.classList.toggle('mopen');
+  document.getElementById('main-nav').classList.toggle('open');
+}
+function mobToggle(id){
+  if(window.innerWidth>700)return;
+  document.getElementById(id).classList.toggle('mopen');
+}
+document.addEventListener('click',e=>{
+  const nav=document.getElementById('main-nav'),bg=document.getElementById('burger');
+  if(!nav.contains(e.target)&&!bg.contains(e.target)){
+    nav.classList.remove('open');document.body.classList.remove('mopen');
+  }
+});
+
+/* Search */
+function openSearch(){
+  document.getElementById('search-overlay').classList.add('open');
+  setTimeout(()=>document.getElementById('search-input').focus(),50);
+}
+function closeSearch(){document.getElementById('search-overlay').classList.remove('open')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSearch()});
+
+/* ─── Intersection Observer ─── */
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting)return;
+
+    /* Domain cards stagger */
+    if(entry.target.classList.contains('domain-card')){
+      const grid=entry.target.closest('.domains-grid');
+      const idx=[...grid.children].indexOf(entry.target);
+      setTimeout(()=>entry.target.classList.add('visible'), idx*90);
+      io.unobserve(entry.target);
+    }
+
+    /* Section heading */
+    if(entry.target.classList.contains('reveal-title')){
+      entry.target.style.animation='revealTitle .7s ease both';
+      io.unobserve(entry.target);
+    }
+
+    /* Hands: trigger rise animation */
+    if(entry.target.id==='hands-section'){
+      entry.target.classList.add('animated');
+      // after rise completes, swap to float
+      const hands=entry.target.querySelectorAll('.hand-wrap');
+      hands.forEach((h,i)=>{
+        setTimeout(()=>{ h.classList.add('floated'); },1200+i*100);
+      });
+      io.unobserve(entry.target);
+    }
+  });
+},{threshold:0.12});
+
+document.querySelectorAll('.domain-card').forEach(c=>io.observe(c));
+document.querySelectorAll('.reveal-title').forEach(c=>io.observe(c));
+const hs=document.getElementById('hands-section');
+if(hs) io.observe(hs);
+</script>
+
+<style>
+@keyframes revealTitle{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:none}
+}
+</style>
+</body>
+</html>
